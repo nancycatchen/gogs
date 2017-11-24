@@ -79,6 +79,7 @@ func SettingsPost(c *context.Context, f form.RepoSetting) {
 
 		repo.Description = f.Description
 		repo.Website = f.Website
+		repo.LanguageType = f.LanguageType
 
 		// Visibility of forked repository is forced sync with base repository.
 		if repo.IsFork {

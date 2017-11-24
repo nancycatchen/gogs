@@ -124,6 +124,7 @@ func CreatePost(c *context.Context, f form.CreateRepo) {
 	repo, err := models.CreateRepository(c.User, ctxUser, models.CreateRepoOptions{
 		Name:        f.RepoName,
 		Description: f.Description,
+		LanguageType: f.LanguageType,
 		Gitignores:  f.Gitignores,
 		License:     f.License,
 		Readme:      f.Readme,
@@ -198,6 +199,7 @@ func MigratePost(c *context.Context, f form.MigrateRepo) {
 	repo, err := models.MigrateRepository(c.User, ctxUser, models.MigrateRepoOptions{
 		Name:        f.RepoName,
 		Description: f.Description,
+		LanguageType: f.LanguageType,
 		IsPrivate:   f.Private || setting.Repository.ForcePrivate,
 		IsMirror:    f.Mirror,
 		RemoteAddr:  remoteAddr,

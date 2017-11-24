@@ -25,7 +25,10 @@
 							<label for="website">{{.i18n.Tr "repo.settings.site"}}</label>
 							<input id="website" name="website" type="url" value="{{.Repository.Website}}">
 						</div>
-
+							<div class="field {{if .Err_LanguageType}}error{{end}}">
+								<label for="language_type">{{.i18n.Tr "repo.settings.language_type"}}</label>
+								<input id="language_type" name="language_type" type="text" value="{{.Repository.LanguageType}}">
+							</div>
 						{{if not .Repository.IsFork}}
 							<div class="inline field">
 								<label>{{.i18n.Tr "repo.visibility"}}</label>

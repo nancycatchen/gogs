@@ -14,6 +14,7 @@
 				<div class="ui right metas">
 					<span class="text grey"><i class="octicon octicon-star"></i> {{.NumStars}}</span>
 					<span class="text grey"><i class="octicon octicon-git-branch"></i> {{.NumForks}}</span>
+					<div class="cat-dashboard-div">	<span class="ui teal"><i class="tag icon"></i>{{.LanguageType}}</span></div>
 				</div>
 			</div>
 			{{if .Description}}<p class="has-emoji">{{.Description | Str2html}}</p>{{end}}

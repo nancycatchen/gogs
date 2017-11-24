@@ -27,6 +27,7 @@ type CreateRepo struct {
 	RepoName    string `binding:"Required;AlphaDashDot;MaxSize(100)"`
 	Private     bool
 	Description string `binding:"MaxSize(255)"`
+	LanguageType string `binding:"MaxSize(100)"`
 	AutoInit    bool
 	Gitignores  string
 	License     string
@@ -46,6 +47,7 @@ type MigrateRepo struct {
 	Mirror       bool   `json:"mirror"`
 	Private      bool   `json:"private"`
 	Description  string `json:"description" binding:"MaxSize(255)"`
+	LanguageType string `binding:"MaxSize(100)"`
 }
 
 func (f *MigrateRepo) Validate(ctx *macaron.Context, errs binding.Errors) binding.Errors {
@@ -84,6 +86,7 @@ type RepoSetting struct {
 	RepoName      string `binding:"Required;AlphaDashDot;MaxSize(100)"`
 	Description   string `binding:"MaxSize(255)"`
 	Website       string `binding:"Url;MaxSize(100)"`
+	LanguageType string `binding:"MaxSize(100)"`
 	Branch        string
 	Interval      int
 	MirrorAddress string

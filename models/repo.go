@@ -148,6 +148,7 @@ type Repository struct {
 	Name          string `xorm:"INDEX NOT NULL"`
 	Description   string
 	Website       string
+	LanguageType  string
 	DefaultBranch string
 	Size          int64 `xorm:"NOT NULL DEFAULT 0"`
 
@@ -302,6 +303,7 @@ func (repo *Repository) APIFormat(permission *api.Permission) *api.Repository {
 		SSHURL:        cloneLink.SSH,
 		CloneURL:      cloneLink.HTTPS,
 		Website:       repo.Website,
+		LanguageType:  repo.LanguageType,
 		Stars:         repo.NumStars,
 		Forks:         repo.NumForks,
 		Watchers:      repo.NumWatches,
@@ -635,6 +637,7 @@ func (repo *Repository) CloneLink() (cl *CloneLink) {
 type MigrateRepoOptions struct {
 	Name        string
 	Description string
+	LanguageType string
 	IsPrivate   bool
 	IsMirror    bool
 	RemoteAddr  string
@@ -666,6 +669,7 @@ func MigrateRepository(doer, owner *User, opts MigrateRepoOptions) (*Repository,
 	repo, err := CreateRepository(doer, owner, CreateRepoOptions{
 		Name:        opts.Name,
 		Description: opts.Description,
+		LanguageType: opts.LanguageType,
 		IsPrivate:   opts.IsPrivate,
 		IsMirror:    opts.IsMirror,
 	})
@@ -839,6 +843,7 @@ func initRepoCommit(tmpPath string, sig *git.Signature) (err error) {
 type CreateRepoOptions struct {
 	Name        string
 	Description string
+	LanguageType string
 	Gitignores  string
 	License     string
 	Readme      string
@@ -1038,6 +1043,7 @@ func CreateRepository(doer, owner *User, opts CreateRepoOptions) (_ *Repository,
 		Name:         opts.Name,
 		LowerName:    strings.ToLower(opts.Name),
 		Description:  opts.Description,
+		LanguageType: opts.LanguageType,
 		IsPrivate:    opts.IsPrivate,
 		EnableWiki:   true,
 		EnableIssues: true,
@@ -1331,7 +1337,9 @@ func updateRepository(e Engine, repo *Repository, visibilityChanged bool) (err e
 	if len(repo.Website) > 255 {
 		repo.Website = repo.Website[:255]
 	}
-
+	if len(repo.LanguageType) > 255 {
+		repo.LanguageType = repo.LanguageType[:255]
+	}
 	if _, err = e.Id(repo.ID).AllCols().Update(repo); err != nil {
 		return fmt.Errorf("update: %v", err)
 	}
@@ -1653,7 +1661,7 @@ func SearchRepositoryByName(opts *SearchRepoOptions) (repos []*Repository, count
 		}
 	}
 	if len(opts.Keyword) > 0 {
-		sess.And("repo.lower_name LIKE ? OR repo.description LIKE ?", "%"+strings.ToLower(opts.Keyword)+"%", "%"+strings.ToLower(opts.Keyword)+"%")
+		sess.And("repo.lower_name LIKE ? OR repo.description LIKE ? OR repo.language_type LIKE ?", "%"+strings.ToLower(opts.Keyword)+"%", "%"+strings.ToLower(opts.Keyword)+"%", "%"+strings.ToLower(opts.Keyword)+"%")
 	}
 	if opts.OwnerID > 0 {
 		sess.And("repo.owner_id = ?", opts.OwnerID)
